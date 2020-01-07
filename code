@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+from bokeh.plotting import figure, output_file, show
+from bokeh.models import ColumnDataSource
+from bokeh.models.tools import HoverTool
+from bokeh.models.widgets import DataTable, DateFormatter, TableColumn
+from bokeh.models import HoverTool, BoxZoomTool, PanTool, WheelZoomTool
+from bokeh.io import output_file
+
+n=1000
+r = np.linspace(0, 4.0, n)
+iterations = 10000
+last = 10
+x = 1e-5 * np.ones(n)
+df = {}
+p = figure(plot_width=900, plot_height=800,x_range=(0,4))
+
+
+
+for i in range(iterations):
+    #columns = [TableColumn(field="x", title="X values")]
+    x=r*np.cos(np.pi * x)
+    data={'x':x,'r':r}
+    df[i]= pd.DataFrame(data)
+    if i >= (iterations - last): 
+        hover = HoverTool(
+        tooltips= [
+        ('x', '@x'),
+        ('r','@r')])
+        #p.circle(x='r',y='x',color="purple", size=5, source=ColumnDataSource(df))
+        p.circle(x='r',y='x',color="purple", size=5, source=ColumnDataSource(df[i]))
+        #print df[i]
+
+p.add_tools(hover)   
+output_file('bff3.html')
+show(p)
